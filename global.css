@@ -1,0 +1,560 @@
+@import "./tokens.css";
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { color-scheme: dark; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: var(--scale-body);
+  line-height: 1.6;
+}
+h1, h2, h3 { font-weight: 500; margin: 0; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+
+/* ---------- Skip link (design.md §10) ---------- */
+.skip-link {
+  position: absolute;
+  left: var(--space-2);
+  top: -100px;
+  z-index: var(--z-skip);
+  background: var(--paper);
+  color: var(--ink);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 4px;
+  transition: top var(--dur-fade) var(--ease-reveal);
+}
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+/* ---------- Focus ---------- */
+:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
+}
+
+/* ---------- Layout rail ---------- */
+.rail {
+  max-width: var(--rail-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+section {
+  padding-block: var(--section-space);
+}
+
+/* ---------- Labels / eyebrows ---------- */
+.ui-label {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+/* ---------- Nav (design.md §3) ---------- */
+.site-nav {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--gutter);
+  background: transparent;
+  transition: background 250ms var(--ease-reveal), backdrop-filter 250ms var(--ease-reveal);
+}
+.site-nav.is-scrolled {
+  background: rgba(6, 6, 6, 0.72);
+  backdrop-filter: blur(12px);
+}
+.site-nav__mark {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.site-nav__links {
+  display: flex;
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.site-nav__links a {
+  position: relative;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  padding-bottom: 4px;
+}
+.site-nav__links a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 100%;
+  bottom: 0;
+  height: 1px;
+  background: var(--paper);
+  transition: right var(--dur-line) var(--ease-reveal);
+}
+.site-nav__links a[aria-current="location"]::after { right: 0; }
+
+.site-nav__menu-btn {
+  display: none;
+  min-width: 44px; min-height: 44px;
+  background: none; border: none; color: var(--paper);
+  font-family: var(--font-ui); font-size: 12px; letter-spacing: var(--tracking-label);
+  text-transform: uppercase; cursor: pointer;
+}
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-menu);
+  background: var(--ink);
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--gutter);
+}
+.mobile-menu[data-open="true"] { display: flex; }
+.mobile-menu a {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 3rem);
+  text-decoration: none;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .site-nav__links { display: none; }
+  .site-nav__menu-btn { display: block; }
+}
+
+/* ---------- Intro / Hero (#top, design.md §6.1) ---------- */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-5) var(--gutter);
+  background: var(--ink);
+  overflow: hidden;
+}
+.hero__name {
+  position: absolute;
+  left: var(--gutter);
+  bottom: var(--space-5);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+.hero__headline {
+  margin: 0 auto;
+  font-family: var(--font-display);
+  font-size: var(--scale-display);
+  line-height: 0.95;
+  text-align: center;
+  text-transform: uppercase;
+}
+.hero__scroll {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--space-5);
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid var(--mist);
+  padding-bottom: 2px;
+}
+.skip-intro {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--gutter);
+  z-index: var(--z-nav);
+  background: none;
+  border: 1px solid var(--mist);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  padding: 8px 16px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+/* ---------- Manifesto scenes (design.md §6.2) ---------- */
+.manifesto-scene {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-5) var(--gutter);
+  background: var(--ink-raised);
+  border-bottom: var(--hairline);
+}
+/* Placeholder panel stands in for the real motivational image until
+   design.md §5's supplied assets exist. Swap for a real <img> + gradient
+   overlay once the file is approved — see src/data/site.ts imageCredits. */
+.manifesto-scene__placeholder {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(135deg, var(--ink-raised), var(--ink-raised) 20px, #161616 20px, #161616 40px);
+}
+.manifesto-scene__note {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--gutter);
+  font-size: 11px;
+  color: var(--ash);
+}
+.manifesto-scene__line {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: var(--scale-manifesto);
+  line-height: 1.05;
+  text-transform: uppercase;
+  max-width: 900px;
+}
+
+.blackout {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: var(--ink);
+  text-align: center;
+}
+.blackout p {
+  font-family: var(--font-display);
+  font-size: var(--scale-manifesto);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ---------- About (#about) ---------- */
+.about__grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+.about__index {
+  grid-column: span 2;
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  color: var(--ash);
+  border: 1px solid var(--ash);
+  padding: var(--space-2);
+  text-align: center;
+}
+.about__body { grid-column: span 6; max-width: var(--reading-max); }
+.about__portrait {
+  grid-column: span 4;
+  aspect-ratio: 4 / 5;
+  background: var(--ink-raised);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ash);
+  font-size: 12px;
+  text-align: center;
+  padding: var(--space-3);
+}
+.about h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+}
+.about p { color: var(--mist); }
+.todo-note {
+  margin-top: var(--space-3);
+  font-size: 12px;
+  color: var(--ash);
+  border-left: 2px solid var(--ash);
+  padding-left: var(--space-2);
+}
+
+@media (max-width: 1023px) {
+  .about__grid { grid-template-columns: 1fr; }
+  .about__index, .about__body, .about__portrait { grid-column: auto; }
+}
+
+/* ---------- Lab / Work (empty & filled states) ---------- */
+.chapter h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  text-transform: uppercase;
+}
+.chapter__sub { color: var(--mist); margin-top: var(--space-1); }
+.empty-state {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: var(--hairline);
+}
+.empty-state p:first-child {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  margin-bottom: var(--space-1);
+}
+.empty-state p { color: var(--mist); margin: 0; }
+
+.card-grid {
+  margin-top: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-3);
+}
+.card {
+  border: var(--hairline);
+  padding: var(--space-3);
+  background: var(--ink-raised);
+}
+.card__chip {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ember);
+  border: 1px solid var(--ember);
+  border-radius: 999px;
+  padding: 2px 10px;
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- Future (#future) ---------- */
+.future {
+  text-align: center;
+  background: var(--ink);
+}
+.future h2 {
+  font-family: var(--font-display);
+  font-size: var(--scale-manifesto);
+  text-transform: uppercase;
+  max-width: 900px;
+  margin-inline: auto;
+}
+.future p { color: var(--mist); margin-top: var(--space-3); }
+
+/* ---------- Failed image state (design.md §8) ---------- */
+.image-fallback {
+  background: var(--ink-raised);
+  color: var(--ash);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 12px;
+  padding: var(--space-3);
+}
+
+/* ---------- Footer (#end) ---------- */
+footer {
+  padding: var(--space-6) var(--gutter);
+  border-top: var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+  text-align: center;
+}
+.back-to-top {
+  background: none;
+  border: 1px solid var(--mist);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  padding: 10px 18px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.footer__mark { font-size: 12px; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--mist); }
+
+/* ---------- Reduced motion (design.md §7) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .manifesto-scene { padding-block: var(--space-5); }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- Future / classified (design.md §6.6) ---------- */
+.future__inner { text-align: center; }
+.future__eyebrow { margin-bottom: var(--space-3); }
+.future__sub { color: var(--mist); margin-top: var(--space-3); }
+.look-ahead {
+  margin-top: var(--space-5);
+  background: none;
+  border: 1px solid var(--mist);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  padding: 10px 20px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.future-timeline {
+  list-style: none;
+  margin: var(--space-4) auto 0;
+  padding: 0;
+  max-width: 480px;
+  text-align: left;
+  display: grid;
+  gap: var(--space-3);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height var(--dur-fade) var(--ease-reveal), opacity var(--dur-fade) var(--ease-reveal);
+}
+.future-timeline[data-open="true"] {
+  max-height: 300px;
+  opacity: 1;
+}
+.future-timeline li { color: var(--mist); font-size: 14px; padding-left: var(--space-3); position: relative; }
+.future-timeline__bar {
+  position: absolute;
+  left: 0; top: 6px;
+  width: 12px; height: 3px;
+  background: var(--ember);
+}
+@media (prefers-reduced-motion: reduce) {
+  .future-timeline { transition: none; }
+  .future-timeline[data-open="true"] { max-height: none; }
+}
+
+/* ---------- Work card index (design.md §6.5) ---------- */
+.card__index {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--ash);
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- Footer closing (design.md §6.7) ---------- */
+.ember-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ember);
+  box-shadow: 0 0 12px 2px var(--ember-glow);
+  animation: ember-settle 3s var(--ease-reveal) forwards;
+}
+@keyframes ember-settle {
+  from { opacity: 1; box-shadow: 0 0 20px 6px var(--ember-glow); }
+  to { opacity: 0.6; box-shadow: 0 0 6px 1px var(--ember-glow); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ember-dot { animation: none; opacity: 0.6; box-shadow: 0 0 6px 1px var(--ember-glow); }
+}
+.footer__closing {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  text-transform: uppercase;
+  margin: var(--space-3) 0 0;
+}
+.footer__copyright { font-size: 12px; color: var(--mist); }
+
+/* ---------- Nav: hidden chapter links during intro (design.md §3) ---------- */
+.site-nav[data-intro-active="true"] .site-nav__links,
+.site-nav[data-intro-active="true"] .site-nav__menu-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+.site-nav__links, .site-nav__menu-btn {
+  transition: opacity var(--dur-fade) var(--ease-reveal);
+}
+
+/* ---------- Blackout staggered reveal (design.md §6.2) ---------- */
+.blackout p {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: blackout-line var(--dur-fade) var(--ease-reveal) forwards;
+}
+.blackout p:nth-child(1) { animation-delay: 200ms; }
+.blackout p:nth-child(2) { animation-delay: 700ms; }
+@keyframes blackout-line {
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blackout p { opacity: 1; transform: none; animation: none; }
+}
+
+/* ---------- Manifesto scroll-pin (design.md §6.2, §7) ---------- */
+.manifesto-scene {
+  position: relative;
+  height: 200vh; /* extra scroll room the pin plays out across */
+  background: var(--ink-raised);
+  border-bottom: var(--hairline);
+}
+.manifesto-scene__inner {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-5) var(--gutter);
+  overflow: hidden;
+}
+.manifesto-scene__placeholder {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(135deg, var(--ink-raised), var(--ink-raised) 20px, #161616 20px, #161616 40px);
+  transform: scale(var(--scene-scale, 1));
+  transition: transform 60ms linear;
+}
+.manifesto-scene__line {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur-mask) var(--ease-reveal), transform var(--dur-mask) var(--ease-reveal);
+}
+.manifesto-scene.is-visible .manifesto-scene__line {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  /* §7 reduced-motion mode: normal vertical flow, copy already visible, no pin/zoom. */
+  .manifesto-scene { height: auto; border-bottom: none; }
+  .manifesto-scene__inner {
+    position: static;
+    height: auto;
+    min-height: 60svh;
+    align-items: center;
+  }
+  .manifesto-scene__placeholder { transform: none; }
+  .manifesto-scene__line { opacity: 1; transform: none; transition: none; }
+}
+
+/* Ember particle canvas (Scene III only, design.md §6.2 / §7) */
+.ember-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ember-canvas { display: none; }
+}
