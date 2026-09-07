@@ -1,0 +1,36 @@
+---
+import { site } from "../data/site";
+const { person } = site;
+---
+<section id="about" class="about chapter" tabindex="-1">
+  <div class="rail about__grid">
+    <div class="about__index" aria-hidden="true">01 / About</div>
+
+    <div class="about__body">
+      <h2>The person behind the journey.</h2>
+      <p>
+        Harsh Singh Rajput is a full-time Class 11 student in 2026.
+        He is studying, learning new skills through building, and putting in
+        the work before the bigger things arrive.
+      </p>
+      {person.statement ? (
+        <p>{person.statement}</p>
+      ) : (
+        <p class="todo-note">
+          TODO: 60–120 word first-person statement from Harsh — what he's
+          curious about and why he builds (design.md §6.3). Not shown to
+          visitors until supplied.
+        </p>
+      )}
+      {person.location && <p class="todo-note">{person.location}</p>}
+    </div>
+
+    <div class="about__portrait">
+      {person.photo ? (
+        <img src={person.photo} alt="Portrait of Harsh Singh Rajput" />
+      ) : (
+        <span>Approved portrait pending (design.md §5)</span>
+      )}
+    </div>
+  </div>
+</section>
